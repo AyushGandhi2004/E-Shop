@@ -31,7 +31,6 @@ export type UsersMinAggregateOutputType = {
   password: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  imagesId: string | null
 }
 
 export type UsersMaxAggregateOutputType = {
@@ -41,7 +40,6 @@ export type UsersMaxAggregateOutputType = {
   password: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  imagesId: string | null
 }
 
 export type UsersCountAggregateOutputType = {
@@ -52,7 +50,6 @@ export type UsersCountAggregateOutputType = {
   following: number
   createdAt: number
   updatedAt: number
-  imagesId: number
   _all: number
 }
 
@@ -64,7 +61,6 @@ export type UsersMinAggregateInputType = {
   password?: true
   createdAt?: true
   updatedAt?: true
-  imagesId?: true
 }
 
 export type UsersMaxAggregateInputType = {
@@ -74,7 +70,6 @@ export type UsersMaxAggregateInputType = {
   password?: true
   createdAt?: true
   updatedAt?: true
-  imagesId?: true
 }
 
 export type UsersCountAggregateInputType = {
@@ -85,7 +80,6 @@ export type UsersCountAggregateInputType = {
   following?: true
   createdAt?: true
   updatedAt?: true
-  imagesId?: true
   _all?: true
 }
 
@@ -169,7 +163,6 @@ export type UsersGroupByOutputType = {
   following: string[]
   createdAt: Date
   updatedAt: Date
-  imagesId: string
   _count: UsersCountAggregateOutputType | null
   _min: UsersMinAggregateOutputType | null
   _max: UsersMaxAggregateOutputType | null
@@ -201,7 +194,6 @@ export type usersWhereInput = {
   following?: Prisma.StringNullableListFilter<"users">
   createdAt?: Prisma.DateTimeFilter<"users"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"users"> | Date | string
-  imagesId?: Prisma.StringFilter<"users"> | string
   avatar?: Prisma.XOR<Prisma.ImagesNullableScalarRelationFilter, Prisma.imagesWhereInput> | null
 }
 
@@ -213,7 +205,6 @@ export type usersOrderByWithRelationInput = {
   following?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  imagesId?: Prisma.SortOrder
   avatar?: Prisma.imagesOrderByWithRelationInput
 }
 
@@ -228,7 +219,6 @@ export type usersWhereUniqueInput = Prisma.AtLeast<{
   following?: Prisma.StringNullableListFilter<"users">
   createdAt?: Prisma.DateTimeFilter<"users"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"users"> | Date | string
-  imagesId?: Prisma.StringFilter<"users"> | string
   avatar?: Prisma.XOR<Prisma.ImagesNullableScalarRelationFilter, Prisma.imagesWhereInput> | null
 }, "id" | "email">
 
@@ -240,7 +230,6 @@ export type usersOrderByWithAggregationInput = {
   following?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  imagesId?: Prisma.SortOrder
   _count?: Prisma.usersCountOrderByAggregateInput
   _max?: Prisma.usersMaxOrderByAggregateInput
   _min?: Prisma.usersMinOrderByAggregateInput
@@ -257,7 +246,6 @@ export type usersScalarWhereWithAggregatesInput = {
   following?: Prisma.StringNullableListFilter<"users">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"users"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"users"> | Date | string
-  imagesId?: Prisma.StringWithAggregatesFilter<"users"> | string
 }
 
 export type usersCreateInput = {
@@ -268,7 +256,6 @@ export type usersCreateInput = {
   following?: Prisma.usersCreatefollowingInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  imagesId: string
   avatar?: Prisma.imagesCreateNestedOneWithoutUsersInput
 }
 
@@ -280,7 +267,6 @@ export type usersUncheckedCreateInput = {
   following?: Prisma.usersCreatefollowingInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  imagesId: string
   avatar?: Prisma.imagesUncheckedCreateNestedOneWithoutUsersInput
 }
 
@@ -291,7 +277,6 @@ export type usersUpdateInput = {
   following?: Prisma.usersUpdatefollowingInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  imagesId?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.imagesUpdateOneWithoutUsersNestedInput
 }
 
@@ -302,7 +287,6 @@ export type usersUncheckedUpdateInput = {
   following?: Prisma.usersUpdatefollowingInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  imagesId?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.imagesUncheckedUpdateOneWithoutUsersNestedInput
 }
 
@@ -314,7 +298,6 @@ export type usersCreateManyInput = {
   following?: Prisma.usersCreatefollowingInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  imagesId: string
 }
 
 export type usersUpdateManyMutationInput = {
@@ -324,7 +307,6 @@ export type usersUpdateManyMutationInput = {
   following?: Prisma.usersUpdatefollowingInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  imagesId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type usersUncheckedUpdateManyInput = {
@@ -334,7 +316,6 @@ export type usersUncheckedUpdateManyInput = {
   following?: Prisma.usersUpdatefollowingInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  imagesId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type UsersNullableScalarRelationFilter = {
@@ -358,7 +339,6 @@ export type usersCountOrderByAggregateInput = {
   following?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  imagesId?: Prisma.SortOrder
 }
 
 export type usersMaxOrderByAggregateInput = {
@@ -368,7 +348,6 @@ export type usersMaxOrderByAggregateInput = {
   password?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  imagesId?: Prisma.SortOrder
 }
 
 export type usersMinOrderByAggregateInput = {
@@ -378,7 +357,6 @@ export type usersMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  imagesId?: Prisma.SortOrder
 }
 
 export type usersCreateNestedOneWithoutAvatarInput = {
@@ -418,7 +396,6 @@ export type usersCreateWithoutAvatarInput = {
   following?: Prisma.usersCreatefollowingInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  imagesId: string
 }
 
 export type usersUncheckedCreateWithoutAvatarInput = {
@@ -429,7 +406,6 @@ export type usersUncheckedCreateWithoutAvatarInput = {
   following?: Prisma.usersCreatefollowingInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
-  imagesId: string
 }
 
 export type usersCreateOrConnectWithoutAvatarInput = {
@@ -455,7 +431,6 @@ export type usersUpdateWithoutAvatarInput = {
   following?: Prisma.usersUpdatefollowingInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  imagesId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type usersUncheckedUpdateWithoutAvatarInput = {
@@ -465,7 +440,6 @@ export type usersUncheckedUpdateWithoutAvatarInput = {
   following?: Prisma.usersUpdatefollowingInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  imagesId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -478,7 +452,6 @@ export type usersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   following?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  imagesId?: boolean
   avatar?: boolean | Prisma.users$avatarArgs<ExtArgs>
 }, ExtArgs["result"]["users"]>
 
@@ -492,10 +465,9 @@ export type usersSelectScalar = {
   following?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  imagesId?: boolean
 }
 
-export type usersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "following" | "createdAt" | "updatedAt" | "imagesId", ExtArgs["result"]["users"]>
+export type usersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "following" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
 export type usersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   avatar?: boolean | Prisma.users$avatarArgs<ExtArgs>
 }
@@ -513,7 +485,6 @@ export type $usersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     following: string[]
     createdAt: Date
     updatedAt: Date
-    imagesId: string
   }, ExtArgs["result"]["users"]>
   composites: {}
 }
@@ -914,7 +885,6 @@ export interface usersFieldRefs {
   readonly following: Prisma.FieldRef<"users", 'String[]'>
   readonly createdAt: Prisma.FieldRef<"users", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"users", 'DateTime'>
-  readonly imagesId: Prisma.FieldRef<"users", 'String'>
 }
     
 

@@ -1,8 +1,9 @@
 import crypto from 'crypto';
 import { ValidationError } from '../../../../packages/error-handler/index.js';
-import type { NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import redis from '../../../../packages/libs/redis/index.js';
 import { sendEmail } from './sendEmail.js';
+import prisma from '../../prisma/index.js';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -57,3 +58,58 @@ export const sendOtp = async (name : string, email : string, template : string, 
     await redis.set(`otp:limit:${email}`, 1, "EX", 60); // Set OTP limit with a 1-minute expiration
 }
 
+export const verifyOtp = async (email : string, otp : string, next: NextFunction)=>{
+    const key = `otp:${email}`;
+    const originalOtp = await redis.get(key);
+
+    if(!originalOtp) throw new ValidationError("Invalid or Expired OTP");
+
+    if(originalOtp !== otp){
+        const failedAttempts = parseInt(await redis.get(`otp:fail:${email}`) || "0") ;
+        if(failedAttempts>=2){
+            await redis.set(`otp:lock:${email}`, 1, "EX", 30*60)
+            await redis.del(`otp:email`)
+            throw new ValidationError("Too many failed attempts, try again after 30 mins")
+        }
+        await redis.set(`otp:fail:${email}`, (failedAttempts+1), "EX", 300)
+        throw new ValidationError(`Invalid OTP, ${2-failedAttempts} attempts remaining`)
+    }
+
+    //If otp is correct, delete the failed attempt key:
+    await redis.del(`otp:fail:${email}`);
+}
+
+export const handleForgotPassword = async (req : Request, res : Response, next : NextFunction, userType : "user" | "seller")=>{
+    try {
+        const {email} = req.body;
+        if(!email) throw new ValidationError("Email is required");
+
+        const user = (userType === "user") && await prisma.users.findUnique({where : {email}});
+        if(!user) throw new ValidationError(`${userType} with this email does not exist`);
+        await checkEmailOtpRestrictions(email, next);
+        await trackOtpRequest(email, next);
+        const otp = crypto.randomInt(1000, 9999).toString();
+        await sendEmail(email,"OTP for Password Reset", "forgot-password-otp-mail-template",{});
+
+        res.status(200).json({
+            message : "OTP sent to your email, please verify to reset your password"
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const verifyForgotPasswordOtp = async (req : Request, res : Response, next : NextFunction)=>{
+    try {
+        const { email, otp } = req.body;
+        if(!email || !otp) throw new ValidationError("Email and OTP are required");
+
+        await verifyOtp(email, otp, next);
+
+        res.status(200).json({
+            message : "OTP verified successfully, you can now reset your password"
+        });
+    } catch (error) {
+        next(error);
+    }
+}

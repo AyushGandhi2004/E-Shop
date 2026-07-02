@@ -76,8 +76,7 @@ export const UsersScalarFieldEnum = {
   password: 'password',
   following: 'following',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  imagesId: 'imagesId'
+  updatedAt: 'updatedAt'
 } as const
 
 export type UsersScalarFieldEnum = (typeof UsersScalarFieldEnum)[keyof typeof UsersScalarFieldEnum]
