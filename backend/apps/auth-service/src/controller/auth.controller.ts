@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import prisma from "../../prisma/index.js";
-import { ValidationError } from "../../../../packages/error-handler/index.js";
-import { validaRegistrationData, checkEmailOtpRestrictions, trackOtpRequest, sendOtp, verifyOtp, handleForgotPassword } from "../utils/auth.helper.js";
+import { AuthError, ValidationError } from "../../../../packages/error-handler/index.js";
+import { validaRegistrationData, checkEmailOtpRestrictions, trackOtpRequest, sendOtp, verifyOtp, handleForgotPassword, verifyForgotPasswordOTP } from "../utils/auth.helper.js";
 import bcrypt from "bcryptjs"
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
@@ -103,6 +103,51 @@ export const loginUser = async (req : Request, res : Response, next : NextFuncti
     }
 }
 
+//refresh token user:
+export const refreshToken = async (req : Request, res : Response, next : NextFunction) => {
+    try {
+        const refreshToken = req.cookies.refresh_token;
+        if(!refreshToken) return new AuthError("Unauthorised Access, Please LogIn");
+
+        //If token is present decode it:
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET as string) as {id : string, role : string};
+
+        if(!decoded || !decoded.id || !decoded.role) return new AuthError("Forbidden Access, Invalid Token");
+
+
+        //As of now no seller db so consider user type only then extend it to seller and admin roles:
+        const user = await prisma.users.findUnique({where : {id : decoded.id}});
+        if(!user) return new AuthError("No such user exists");
+
+        const newAccessToken = jwt.sign({id : decoded.id, role : decoded.role}, process.env.ACCESS_SECRET as string, {expiresIn : "15m"});
+        setCookie(res,"access_token",newAccessToken);
+
+        return res.status(201).json({
+            success : true
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+//get Logged in user Info:
+export const getUser = async (req : any, res : Response, next : NextFunction)=>{
+    try {
+        const user = req.user;
+        res.status(201).json({
+            success : true,
+            user : {
+                name : user.name,
+                email : user.email,
+                role : user.role
+            }
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}
+
 export const forgotPassword = async (req : Request, res : Response, next : NextFunction) => {
     try {
         handleForgotPassword(req, res, next, "user")
@@ -113,7 +158,7 @@ export const forgotPassword = async (req : Request, res : Response, next : NextF
 
 //verify forgot password otp:
 export const verifyForgotPasswordOtp = async (req : Request, res : Response, next : NextFunction) => {
-    await verifyForgotPasswordOtp(req, res, next);
+    await verifyForgotPasswordOTP(req, res, next);
 }
 
 export const resetPassword = async (req : Request, res : Response, next : NextFunction) => {

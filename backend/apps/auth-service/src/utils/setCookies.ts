@@ -3,8 +3,9 @@ import type { Response } from "express";
 export const setCookie = (res : Response, name : string, value : string)=>{
     res.cookie(name, value, {
         httpOnly : true,
-        secure : false,
-        sameSite : "none",
+        secure : process.env.NODE_ENV === "production",
+        sameSite : process.env.NODE_ENV === "production" ? "none" : "lax",
+        path : "/",
         maxAge : 7*24*60*60*1000,
     })
 }

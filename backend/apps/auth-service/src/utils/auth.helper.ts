@@ -12,7 +12,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$
 
 export const validaRegistrationData = (data : any , userType : "user" | "seller" | "admin")=> {
     const { email, username, name, password, phone_number, country } = data;
-    if(!email || !username || !name || (userType === "seller" && (!phone_number || !country))){
+    if(!email || !name || (userType === "seller" && (!phone_number || !country))){
         throw new ValidationError("Missing Required Fields");
     }
     if(!emailRegex.test(email)){
@@ -89,7 +89,7 @@ export const handleForgotPassword = async (req : Request, res : Response, next :
         await checkEmailOtpRestrictions(email, next);
         await trackOtpRequest(email, next);
         const otp = crypto.randomInt(1000, 9999).toString();
-        await sendEmail(email,"OTP for Password Reset", "forgot-password-otp-mail-template",{});
+        await sendOtp(user.name, email, "forgot-password-otp-mail-template", next);
 
         res.status(200).json({
             message : "OTP sent to your email, please verify to reset your password"
@@ -99,7 +99,7 @@ export const handleForgotPassword = async (req : Request, res : Response, next :
     }
 }
 
-export const verifyForgotPasswordOtp = async (req : Request, res : Response, next : NextFunction)=>{
+export const verifyForgotPasswordOTP = async (req : Request, res : Response, next : NextFunction)=>{
     try {
         const { email, otp } = req.body;
         if(!email || !otp) throw new ValidationError("Email and OTP are required");
@@ -110,6 +110,7 @@ export const verifyForgotPasswordOtp = async (req : Request, res : Response, nex
             message : "OTP verified successfully, you can now reset your password"
         });
     } catch (error) {
+        console.log(error)
         next(error);
     }
 }

@@ -9,7 +9,7 @@ const app = express();
 
 //global middlewares
 app.use(cors({
-    origin : process.env.CORS_ORIGIN || ['http:localhost:3000'],
+    origin : process.env.CORS_ORIGIN || ['http://localhost:3000'],
     allowedHeaders : ['Authorization', 'Content-Type'],
     credentials : true,
 }));
@@ -42,7 +42,7 @@ app.use('/', proxy('http://localhost:6001'));
 
 
 
-const port = process.env.PORT || 6000;
+const port = process.env.PORT || 8080;
 const server = app.listen(port, ()=>{
     console.log(`API Gateway is running on port ${port}`);
 });
