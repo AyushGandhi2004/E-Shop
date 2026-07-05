@@ -25,7 +25,7 @@ const Login = () => {
 
     const loginMutation = useMutation({
         mutationFn : async (data : FormData) => {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, data, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/seller/login`, data, {
                 withCredentials : true,
             });
             return response.data;
@@ -64,7 +64,7 @@ const Login = () => {
                     </p>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <label className='block text-gray-700 mb-1'>E-mail</label>
+                        <label className='block text-gray-700 mb-1'>Seller E-mail</label>
                         <input type="email" placeholder='xyz@gmail.com' className='w-full p-2 border border-gray-300 outlie-o rounded mb-1' {...register('email',{
                             required : "Email is required",
                             pattern : {

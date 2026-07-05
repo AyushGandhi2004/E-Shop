@@ -214,7 +214,7 @@ const Signup = () => {
                                                 Resend OTP
                                             </button>
                                         ) : (
-                                            `Resend OTP in {timer} seconds`
+                                            `Resend OTP in ${timer} seconds`
                                         )
                                     }
                                 </p>

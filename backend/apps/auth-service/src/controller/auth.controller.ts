@@ -288,7 +288,7 @@ export const createStripeConnectLink = async (req : Request, res : Response, nex
         const account = await stripe.accounts.create({
             type : "express",
             email : seller.email, 
-            country : "IN",//set it to INDIA
+            country : "US",//set it to USA
             capabilities : {
                 card_payments : {requested : true},
                 transfers : {requested : true}
@@ -303,8 +303,8 @@ export const createStripeConnectLink = async (req : Request, res : Response, nex
 
         const accountLink = await stripe.accountLinks.create({
             account : account.id,
-            refresh_url : "http://localhost:3001/seller/pending",
-            return_url : "http://localhost:3001/seller/success",
+            refresh_url : "http://localhost:3000/signup/pending",
+            return_url : "http://localhost:3000/signup/success",
             type : "account_onboarding"
         });
         console.log(accountLink)
