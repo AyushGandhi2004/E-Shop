@@ -195,6 +195,7 @@ export type usersWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"users"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"users"> | Date | string
   avatar?: Prisma.XOR<Prisma.ImagesNullableScalarRelationFilter, Prisma.imagesWhereInput> | null
+  shopReviews?: Prisma.ShopReviewsListRelationFilter
 }
 
 export type usersOrderByWithRelationInput = {
@@ -206,6 +207,7 @@ export type usersOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   avatar?: Prisma.imagesOrderByWithRelationInput
+  shopReviews?: Prisma.shopReviewsOrderByRelationAggregateInput
 }
 
 export type usersWhereUniqueInput = Prisma.AtLeast<{
@@ -220,6 +222,7 @@ export type usersWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"users"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"users"> | Date | string
   avatar?: Prisma.XOR<Prisma.ImagesNullableScalarRelationFilter, Prisma.imagesWhereInput> | null
+  shopReviews?: Prisma.ShopReviewsListRelationFilter
 }, "id" | "email">
 
 export type usersOrderByWithAggregationInput = {
@@ -257,6 +260,7 @@ export type usersCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   avatar?: Prisma.imagesCreateNestedOneWithoutUsersInput
+  shopReviews?: Prisma.shopReviewsCreateNestedManyWithoutUsersInput
 }
 
 export type usersUncheckedCreateInput = {
@@ -268,6 +272,7 @@ export type usersUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   avatar?: Prisma.imagesUncheckedCreateNestedOneWithoutUsersInput
+  shopReviews?: Prisma.shopReviewsUncheckedCreateNestedManyWithoutUsersInput
 }
 
 export type usersUpdateInput = {
@@ -278,6 +283,7 @@ export type usersUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   avatar?: Prisma.imagesUpdateOneWithoutUsersNestedInput
+  shopReviews?: Prisma.shopReviewsUpdateManyWithoutUsersNestedInput
 }
 
 export type usersUncheckedUpdateInput = {
@@ -288,6 +294,7 @@ export type usersUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   avatar?: Prisma.imagesUncheckedUpdateOneWithoutUsersNestedInput
+  shopReviews?: Prisma.shopReviewsUncheckedUpdateManyWithoutUsersNestedInput
 }
 
 export type usersCreateManyInput = {
@@ -359,6 +366,11 @@ export type usersMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
+export type UsersScalarRelationFilter = {
+  is?: Prisma.usersWhereInput
+  isNot?: Prisma.usersWhereInput
+}
+
 export type usersCreateNestedOneWithoutAvatarInput = {
   create?: Prisma.XOR<Prisma.usersCreateWithoutAvatarInput, Prisma.usersUncheckedCreateWithoutAvatarInput>
   connectOrCreate?: Prisma.usersCreateOrConnectWithoutAvatarInput
@@ -388,6 +400,20 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type usersCreateNestedOneWithoutShopReviewsInput = {
+  create?: Prisma.XOR<Prisma.usersCreateWithoutShopReviewsInput, Prisma.usersUncheckedCreateWithoutShopReviewsInput>
+  connectOrCreate?: Prisma.usersCreateOrConnectWithoutShopReviewsInput
+  connect?: Prisma.usersWhereUniqueInput
+}
+
+export type usersUpdateOneRequiredWithoutShopReviewsNestedInput = {
+  create?: Prisma.XOR<Prisma.usersCreateWithoutShopReviewsInput, Prisma.usersUncheckedCreateWithoutShopReviewsInput>
+  connectOrCreate?: Prisma.usersCreateOrConnectWithoutShopReviewsInput
+  upsert?: Prisma.usersUpsertWithoutShopReviewsInput
+  connect?: Prisma.usersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutShopReviewsInput, Prisma.usersUpdateWithoutShopReviewsInput>, Prisma.usersUncheckedUpdateWithoutShopReviewsInput>
+}
+
 export type usersCreateWithoutAvatarInput = {
   id?: string
   name: string
@@ -396,6 +422,7 @@ export type usersCreateWithoutAvatarInput = {
   following?: Prisma.usersCreatefollowingInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
+  shopReviews?: Prisma.shopReviewsCreateNestedManyWithoutUsersInput
 }
 
 export type usersUncheckedCreateWithoutAvatarInput = {
@@ -406,6 +433,7 @@ export type usersUncheckedCreateWithoutAvatarInput = {
   following?: Prisma.usersCreatefollowingInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
+  shopReviews?: Prisma.shopReviewsUncheckedCreateNestedManyWithoutUsersInput
 }
 
 export type usersCreateOrConnectWithoutAvatarInput = {
@@ -431,6 +459,7 @@ export type usersUpdateWithoutAvatarInput = {
   following?: Prisma.usersUpdatefollowingInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  shopReviews?: Prisma.shopReviewsUpdateManyWithoutUsersNestedInput
 }
 
 export type usersUncheckedUpdateWithoutAvatarInput = {
@@ -440,8 +469,96 @@ export type usersUncheckedUpdateWithoutAvatarInput = {
   following?: Prisma.usersUpdatefollowingInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  shopReviews?: Prisma.shopReviewsUncheckedUpdateManyWithoutUsersNestedInput
 }
 
+export type usersCreateWithoutShopReviewsInput = {
+  id?: string
+  name: string
+  email: string
+  password?: string | null
+  following?: Prisma.usersCreatefollowingInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  avatar?: Prisma.imagesCreateNestedOneWithoutUsersInput
+}
+
+export type usersUncheckedCreateWithoutShopReviewsInput = {
+  id?: string
+  name: string
+  email: string
+  password?: string | null
+  following?: Prisma.usersCreatefollowingInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  avatar?: Prisma.imagesUncheckedCreateNestedOneWithoutUsersInput
+}
+
+export type usersCreateOrConnectWithoutShopReviewsInput = {
+  where: Prisma.usersWhereUniqueInput
+  create: Prisma.XOR<Prisma.usersCreateWithoutShopReviewsInput, Prisma.usersUncheckedCreateWithoutShopReviewsInput>
+}
+
+export type usersUpsertWithoutShopReviewsInput = {
+  update: Prisma.XOR<Prisma.usersUpdateWithoutShopReviewsInput, Prisma.usersUncheckedUpdateWithoutShopReviewsInput>
+  create: Prisma.XOR<Prisma.usersCreateWithoutShopReviewsInput, Prisma.usersUncheckedCreateWithoutShopReviewsInput>
+  where?: Prisma.usersWhereInput
+}
+
+export type usersUpdateToOneWithWhereWithoutShopReviewsInput = {
+  where?: Prisma.usersWhereInput
+  data: Prisma.XOR<Prisma.usersUpdateWithoutShopReviewsInput, Prisma.usersUncheckedUpdateWithoutShopReviewsInput>
+}
+
+export type usersUpdateWithoutShopReviewsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  following?: Prisma.usersUpdatefollowingInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  avatar?: Prisma.imagesUpdateOneWithoutUsersNestedInput
+}
+
+export type usersUncheckedUpdateWithoutShopReviewsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  following?: Prisma.usersUpdatefollowingInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  avatar?: Prisma.imagesUncheckedUpdateOneWithoutUsersNestedInput
+}
+
+
+/**
+ * Count Type UsersCountOutputType
+ */
+
+export type UsersCountOutputType = {
+  shopReviews: number
+}
+
+export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  shopReviews?: boolean | UsersCountOutputTypeCountShopReviewsArgs
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UsersCountOutputType
+   */
+  select?: Prisma.UsersCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountShopReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.shopReviewsWhereInput
+}
 
 
 export type usersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -453,6 +570,8 @@ export type usersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   updatedAt?: boolean
   avatar?: boolean | Prisma.users$avatarArgs<ExtArgs>
+  shopReviews?: boolean | Prisma.users$shopReviewsArgs<ExtArgs>
+  _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["users"]>
 
 
@@ -470,12 +589,15 @@ export type usersSelectScalar = {
 export type usersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "following" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
 export type usersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   avatar?: boolean | Prisma.users$avatarArgs<ExtArgs>
+  shopReviews?: boolean | Prisma.users$shopReviewsArgs<ExtArgs>
+  _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }
 
 export type $usersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "users"
   objects: {
     avatar: Prisma.$imagesPayload<ExtArgs> | null
+    shopReviews: Prisma.$shopReviewsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -849,6 +971,7 @@ readonly fields: usersFieldRefs;
 export interface Prisma__usersClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   avatar<T extends Prisma.users$avatarArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$avatarArgs<ExtArgs>>): Prisma.Prisma__imagesClient<runtime.Types.Result.GetResult<Prisma.$imagesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  shopReviews<T extends Prisma.users$shopReviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$shopReviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$shopReviewsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1271,6 +1394,30 @@ export type users$avatarArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.imagesInclude<ExtArgs> | null
   where?: Prisma.imagesWhereInput
+}
+
+/**
+ * users.shopReviews
+ */
+export type users$shopReviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the shopReviews
+   */
+  select?: Prisma.shopReviewsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the shopReviews
+   */
+  omit?: Prisma.shopReviewsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.shopReviewsInclude<ExtArgs> | null
+  where?: Prisma.shopReviewsWhereInput
+  orderBy?: Prisma.shopReviewsOrderByWithRelationInput | Prisma.shopReviewsOrderByWithRelationInput[]
+  cursor?: Prisma.shopReviewsWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ShopReviewsScalarFieldEnum | Prisma.ShopReviewsScalarFieldEnum[]
 }
 
 /**

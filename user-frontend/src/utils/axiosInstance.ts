@@ -38,6 +38,10 @@ axiosInstance.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
+        // if (originalRequest?.url?.includes('/api/me')) {
+        //     return Promise.reject(error);
+        // }
+
         //prevent infinite loops
         if(error.response?.status === 401 && !originalRequest._retry){
             if(isRefreshing){

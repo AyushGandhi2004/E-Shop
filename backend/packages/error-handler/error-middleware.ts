@@ -1,8 +1,12 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { AppError } from "./index.js"
 
 
-export const errorMiddleware = (err : Error, req : Request, res : Response)=>{
+export const errorMiddleware = (err : Error, req : Request, res : Response, next : NextFunction)=>{
+    if(res.headersSent) {
+        return next(err);
+    }
+
     if(err instanceof AppError){
         console.log(`Error: ${err.message}, ${req.method} - ${req.url}}`);
 

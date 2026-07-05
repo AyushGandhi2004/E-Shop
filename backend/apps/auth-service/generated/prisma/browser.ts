@@ -27,3 +27,18 @@ export type images = Prisma.imagesModel
  * 
  */
 export type users = Prisma.usersModel
+/**
+ * Model shopReviews
+ * 
+ */
+export type shopReviews = Prisma.shopReviewsModel
+/**
+ * Model shops
+ * 
+ */
+export type shops = Prisma.shopsModel
+/**
+ * Model sellers
+ * 
+ */
+export type sellers = Prisma.sellersModel

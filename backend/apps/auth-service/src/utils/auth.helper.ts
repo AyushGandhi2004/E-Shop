@@ -12,7 +12,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$
 
 export const validaRegistrationData = (data : any , userType : "user" | "seller" | "admin")=> {
     const { email, username, name, password, phone_number, country } = data;
-    if(!email || !name || (userType === "seller" && (!phone_number || !country))){
+    if(!email || !name || (userType === "seller" && (!phone_number || !country || !password))){
         throw new ValidationError("Missing Required Fields");
     }
     if(!emailRegex.test(email)){
@@ -61,7 +61,6 @@ export const sendOtp = async (name : string, email : string, template : string, 
 export const verifyOtp = async (email : string, otp : string, next: NextFunction)=>{
     const key = `otp:${email}`;
     const originalOtp = await redis.get(key);
-
     if(!originalOtp) throw new ValidationError("Invalid or Expired OTP");
 
     if(originalOtp !== otp){
@@ -84,12 +83,12 @@ export const handleForgotPassword = async (req : Request, res : Response, next :
         const {email} = req.body;
         if(!email) throw new ValidationError("Email is required");
 
-        const user = (userType === "user") && await prisma.users.findUnique({where : {email}});
+        const user = (userType === "user") ? await prisma.users.findUnique({where : {email}}) : await prisma.sellers.findUnique({where : {email}});
         if(!user) throw new ValidationError(`${userType} with this email does not exist`);
         await checkEmailOtpRestrictions(email, next);
         await trackOtpRequest(email, next);
         const otp = crypto.randomInt(1000, 9999).toString();
-        await sendOtp(user.name, email, "forgot-password-otp-mail-template", next);
+        await sendOtp(user.name, email, userType==="user" ? "forgot-password-otp-mail-template" : "forgot-password-seller-mail-template", next);
 
         res.status(200).json({
             message : "OTP sent to your email, please verify to reset your password"

@@ -1,6 +1,6 @@
 import express from "express";
 import { Router } from "express";
-import { forgotPassword, getUser, loginUser, refreshToken, registerUser, resetPassword, verifyForgotPasswordOtp, verifyUser } from "../controller/auth.controller.js";
+import { createShop, createStripeConnectLink, forgotPassword, getSeller, getUser, loginSeller, loginUser, refreshToken, registerSeller, registerUser, resetPassword, verifyForgotPasswordOtp, verifySeller, verifyUser } from "../controller/auth.controller.js";
 import authMiddleware from "../../../../packages/middleware/authMiddleware.js"
 
 const router = Router()
@@ -12,5 +12,11 @@ router.get("/me", authMiddleware, getUser);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.post("/verify-forgot-password-otp", verifyForgotPasswordOtp);
+router.post("/seller/register", registerSeller);
+router.post("/seller/verify", verifySeller);
+router.post("/shop/create", createShop);
+router.post("/stripe/create", createStripeConnectLink);
+router.post("/seller/login", loginSeller);
+router.get("/seller/me", authMiddleware, getSeller);
 
 export default router;

@@ -9,7 +9,7 @@ const app = express();
 
 //global middlewares
 app.use(cors({
-    origin : process.env.CORS_ORIGIN || ['http://localhost:3000'],
+    origin : process.env.CORS_ORIGIN || ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
     allowedHeaders : ['Authorization', 'Content-Type'],
     credentials : true,
 }));

@@ -29,6 +29,7 @@ export type ImagesMinAggregateOutputType = {
   file_id: string | null
   url: string | null
   userId: string | null
+  shopId: string | null
 }
 
 export type ImagesMaxAggregateOutputType = {
@@ -36,6 +37,7 @@ export type ImagesMaxAggregateOutputType = {
   file_id: string | null
   url: string | null
   userId: string | null
+  shopId: string | null
 }
 
 export type ImagesCountAggregateOutputType = {
@@ -43,6 +45,7 @@ export type ImagesCountAggregateOutputType = {
   file_id: number
   url: number
   userId: number
+  shopId: number
   _all: number
 }
 
@@ -52,6 +55,7 @@ export type ImagesMinAggregateInputType = {
   file_id?: true
   url?: true
   userId?: true
+  shopId?: true
 }
 
 export type ImagesMaxAggregateInputType = {
@@ -59,6 +63,7 @@ export type ImagesMaxAggregateInputType = {
   file_id?: true
   url?: true
   userId?: true
+  shopId?: true
 }
 
 export type ImagesCountAggregateInputType = {
@@ -66,6 +71,7 @@ export type ImagesCountAggregateInputType = {
   file_id?: true
   url?: true
   userId?: true
+  shopId?: true
   _all?: true
 }
 
@@ -146,6 +152,7 @@ export type ImagesGroupByOutputType = {
   file_id: string
   url: string
   userId: string | null
+  shopId: string | null
   _count: ImagesCountAggregateOutputType | null
   _min: ImagesMinAggregateOutputType | null
   _max: ImagesMaxAggregateOutputType | null
@@ -174,7 +181,9 @@ export type imagesWhereInput = {
   file_id?: Prisma.StringFilter<"images"> | string
   url?: Prisma.StringFilter<"images"> | string
   userId?: Prisma.StringNullableFilter<"images"> | string | null
+  shopId?: Prisma.StringNullableFilter<"images"> | string | null
   users?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null
+  shops?: Prisma.XOR<Prisma.ShopsNullableScalarRelationFilter, Prisma.shopsWhereInput> | null
 }
 
 export type imagesOrderByWithRelationInput = {
@@ -182,25 +191,30 @@ export type imagesOrderByWithRelationInput = {
   file_id?: Prisma.SortOrder
   url?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  shopId?: Prisma.SortOrder
   users?: Prisma.usersOrderByWithRelationInput
+  shops?: Prisma.shopsOrderByWithRelationInput
 }
 
 export type imagesWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   userId?: string
+  shopId?: string
   AND?: Prisma.imagesWhereInput | Prisma.imagesWhereInput[]
   OR?: Prisma.imagesWhereInput[]
   NOT?: Prisma.imagesWhereInput | Prisma.imagesWhereInput[]
   file_id?: Prisma.StringFilter<"images"> | string
   url?: Prisma.StringFilter<"images"> | string
   users?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null
-}, "id" | "userId">
+  shops?: Prisma.XOR<Prisma.ShopsNullableScalarRelationFilter, Prisma.shopsWhereInput> | null
+}, "id" | "userId" | "shopId">
 
 export type imagesOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   file_id?: Prisma.SortOrder
   url?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  shopId?: Prisma.SortOrder
   _count?: Prisma.imagesCountOrderByAggregateInput
   _max?: Prisma.imagesMaxOrderByAggregateInput
   _min?: Prisma.imagesMinOrderByAggregateInput
@@ -214,6 +228,7 @@ export type imagesScalarWhereWithAggregatesInput = {
   file_id?: Prisma.StringWithAggregatesFilter<"images"> | string
   url?: Prisma.StringWithAggregatesFilter<"images"> | string
   userId?: Prisma.StringNullableWithAggregatesFilter<"images"> | string | null
+  shopId?: Prisma.StringNullableWithAggregatesFilter<"images"> | string | null
 }
 
 export type imagesCreateInput = {
@@ -221,6 +236,7 @@ export type imagesCreateInput = {
   file_id: string
   url: string
   users?: Prisma.usersCreateNestedOneWithoutAvatarInput
+  shops?: Prisma.shopsCreateNestedOneWithoutAvatarInput
 }
 
 export type imagesUncheckedCreateInput = {
@@ -228,18 +244,21 @@ export type imagesUncheckedCreateInput = {
   file_id: string
   url: string
   userId?: string | null
+  shopId?: string | null
 }
 
 export type imagesUpdateInput = {
   file_id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   users?: Prisma.usersUpdateOneWithoutAvatarNestedInput
+  shops?: Prisma.shopsUpdateOneWithoutAvatarNestedInput
 }
 
 export type imagesUncheckedUpdateInput = {
   file_id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type imagesCreateManyInput = {
@@ -247,6 +266,7 @@ export type imagesCreateManyInput = {
   file_id: string
   url: string
   userId?: string | null
+  shopId?: string | null
 }
 
 export type imagesUpdateManyMutationInput = {
@@ -258,6 +278,7 @@ export type imagesUncheckedUpdateManyInput = {
   file_id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shopId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type imagesCountOrderByAggregateInput = {
@@ -265,6 +286,7 @@ export type imagesCountOrderByAggregateInput = {
   file_id?: Prisma.SortOrder
   url?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  shopId?: Prisma.SortOrder
 }
 
 export type imagesMaxOrderByAggregateInput = {
@@ -272,6 +294,7 @@ export type imagesMaxOrderByAggregateInput = {
   file_id?: Prisma.SortOrder
   url?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  shopId?: Prisma.SortOrder
 }
 
 export type imagesMinOrderByAggregateInput = {
@@ -279,6 +302,7 @@ export type imagesMinOrderByAggregateInput = {
   file_id?: Prisma.SortOrder
   url?: Prisma.SortOrder
   userId?: Prisma.SortOrder
+  shopId?: Prisma.SortOrder
 }
 
 export type ImagesNullableScalarRelationFilter = {
@@ -327,16 +351,50 @@ export type imagesUncheckedUpdateOneWithoutUsersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.imagesUpdateToOneWithWhereWithoutUsersInput, Prisma.imagesUpdateWithoutUsersInput>, Prisma.imagesUncheckedUpdateWithoutUsersInput>
 }
 
+export type imagesCreateNestedOneWithoutShopsInput = {
+  create?: Prisma.XOR<Prisma.imagesCreateWithoutShopsInput, Prisma.imagesUncheckedCreateWithoutShopsInput>
+  connectOrCreate?: Prisma.imagesCreateOrConnectWithoutShopsInput
+  connect?: Prisma.imagesWhereUniqueInput
+}
+
+export type imagesUncheckedCreateNestedOneWithoutShopsInput = {
+  create?: Prisma.XOR<Prisma.imagesCreateWithoutShopsInput, Prisma.imagesUncheckedCreateWithoutShopsInput>
+  connectOrCreate?: Prisma.imagesCreateOrConnectWithoutShopsInput
+  connect?: Prisma.imagesWhereUniqueInput
+}
+
+export type imagesUpdateOneWithoutShopsNestedInput = {
+  create?: Prisma.XOR<Prisma.imagesCreateWithoutShopsInput, Prisma.imagesUncheckedCreateWithoutShopsInput>
+  connectOrCreate?: Prisma.imagesCreateOrConnectWithoutShopsInput
+  upsert?: Prisma.imagesUpsertWithoutShopsInput
+  disconnect?: Prisma.imagesWhereInput | boolean
+  delete?: Prisma.imagesWhereInput | boolean
+  connect?: Prisma.imagesWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.imagesUpdateToOneWithWhereWithoutShopsInput, Prisma.imagesUpdateWithoutShopsInput>, Prisma.imagesUncheckedUpdateWithoutShopsInput>
+}
+
+export type imagesUncheckedUpdateOneWithoutShopsNestedInput = {
+  create?: Prisma.XOR<Prisma.imagesCreateWithoutShopsInput, Prisma.imagesUncheckedCreateWithoutShopsInput>
+  connectOrCreate?: Prisma.imagesCreateOrConnectWithoutShopsInput
+  upsert?: Prisma.imagesUpsertWithoutShopsInput
+  disconnect?: Prisma.imagesWhereInput | boolean
+  delete?: Prisma.imagesWhereInput | boolean
+  connect?: Prisma.imagesWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.imagesUpdateToOneWithWhereWithoutShopsInput, Prisma.imagesUpdateWithoutShopsInput>, Prisma.imagesUncheckedUpdateWithoutShopsInput>
+}
+
 export type imagesCreateWithoutUsersInput = {
   id?: string
   file_id: string
   url: string
+  shops?: Prisma.shopsCreateNestedOneWithoutAvatarInput
 }
 
 export type imagesUncheckedCreateWithoutUsersInput = {
   id?: string
   file_id: string
   url: string
+  shopId?: string | null
 }
 
 export type imagesCreateOrConnectWithoutUsersInput = {
@@ -358,11 +416,55 @@ export type imagesUpdateToOneWithWhereWithoutUsersInput = {
 export type imagesUpdateWithoutUsersInput = {
   file_id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  shops?: Prisma.shopsUpdateOneWithoutAvatarNestedInput
 }
 
 export type imagesUncheckedUpdateWithoutUsersInput = {
   file_id?: Prisma.StringFieldUpdateOperationsInput | string
   url?: Prisma.StringFieldUpdateOperationsInput | string
+  shopId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type imagesCreateWithoutShopsInput = {
+  id?: string
+  file_id: string
+  url: string
+  users?: Prisma.usersCreateNestedOneWithoutAvatarInput
+}
+
+export type imagesUncheckedCreateWithoutShopsInput = {
+  id?: string
+  file_id: string
+  url: string
+  userId?: string | null
+}
+
+export type imagesCreateOrConnectWithoutShopsInput = {
+  where: Prisma.imagesWhereUniqueInput
+  create: Prisma.XOR<Prisma.imagesCreateWithoutShopsInput, Prisma.imagesUncheckedCreateWithoutShopsInput>
+}
+
+export type imagesUpsertWithoutShopsInput = {
+  update: Prisma.XOR<Prisma.imagesUpdateWithoutShopsInput, Prisma.imagesUncheckedUpdateWithoutShopsInput>
+  create: Prisma.XOR<Prisma.imagesCreateWithoutShopsInput, Prisma.imagesUncheckedCreateWithoutShopsInput>
+  where?: Prisma.imagesWhereInput
+}
+
+export type imagesUpdateToOneWithWhereWithoutShopsInput = {
+  where?: Prisma.imagesWhereInput
+  data: Prisma.XOR<Prisma.imagesUpdateWithoutShopsInput, Prisma.imagesUncheckedUpdateWithoutShopsInput>
+}
+
+export type imagesUpdateWithoutShopsInput = {
+  file_id?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  users?: Prisma.usersUpdateOneWithoutAvatarNestedInput
+}
+
+export type imagesUncheckedUpdateWithoutShopsInput = {
+  file_id?: Prisma.StringFieldUpdateOperationsInput | string
+  url?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -372,7 +474,9 @@ export type imagesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   file_id?: boolean
   url?: boolean
   userId?: boolean
+  shopId?: boolean
   users?: boolean | Prisma.images$usersArgs<ExtArgs>
+  shops?: boolean | Prisma.images$shopsArgs<ExtArgs>
 }, ExtArgs["result"]["images"]>
 
 
@@ -382,23 +486,27 @@ export type imagesSelectScalar = {
   file_id?: boolean
   url?: boolean
   userId?: boolean
+  shopId?: boolean
 }
 
-export type imagesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "file_id" | "url" | "userId", ExtArgs["result"]["images"]>
+export type imagesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "file_id" | "url" | "userId" | "shopId", ExtArgs["result"]["images"]>
 export type imagesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.images$usersArgs<ExtArgs>
+  shops?: boolean | Prisma.images$shopsArgs<ExtArgs>
 }
 
 export type $imagesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "images"
   objects: {
     users: Prisma.$usersPayload<ExtArgs> | null
+    shops: Prisma.$shopsPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     file_id: string
     url: string
     userId: string | null
+    shopId: string | null
   }, ExtArgs["result"]["images"]>
   composites: {}
 }
@@ -763,6 +871,7 @@ readonly fields: imagesFieldRefs;
 export interface Prisma__imagesClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   users<T extends Prisma.images$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.images$usersArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  shops<T extends Prisma.images$shopsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.images$shopsArgs<ExtArgs>>): Prisma.Prisma__shopsClient<runtime.Types.Result.GetResult<Prisma.$shopsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -796,6 +905,7 @@ export interface imagesFieldRefs {
   readonly file_id: Prisma.FieldRef<"images", 'String'>
   readonly url: Prisma.FieldRef<"images", 'String'>
   readonly userId: Prisma.FieldRef<"images", 'String'>
+  readonly shopId: Prisma.FieldRef<"images", 'String'>
 }
     
 
@@ -1182,6 +1292,25 @@ export type images$usersArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.usersInclude<ExtArgs> | null
   where?: Prisma.usersWhereInput
+}
+
+/**
+ * images.shops
+ */
+export type images$shopsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the shops
+   */
+  select?: Prisma.shopsSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the shops
+   */
+  omit?: Prisma.shopsOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.shopsInclude<ExtArgs> | null
+  where?: Prisma.shopsWhereInput
 }
 
 /**
