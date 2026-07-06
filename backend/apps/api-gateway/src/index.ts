@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import {rateLimit, ipKeyGenerator} from 'express-rate-limit';
 import proxy from 'express-http-proxy';
+import initializeSiteConfig from './libs/initializeSiteConfig.js';
 
 const app = express();
 
@@ -45,6 +46,12 @@ app.use('/', proxy('http://localhost:6001'));
 const port = process.env.PORT || 8080;
 const server = app.listen(port, ()=>{
     console.log(`API Gateway is running on port ${port}`);
+    try {
+        initializeSiteConfig();
+        console.log("Site Config initialized successfully")
+    } catch (error) {
+        console.error("Error occurred while initializing Site Config:", error);
+    }
 });
 
 server.on('error', (err)=>{

@@ -77,6 +77,9 @@ export const loginUser = async (req : Request, res : Response, next : NextFuncti
         const isMatch = await bcrypt.compare(password, user.password!)
         if(!isMatch)  return next(new ValidationError("Invalid email or password"));
 
+        res.clearCookie("seller_access_token");
+        res.clearCookie("seller_refresh_token");
+
         //generate access and refresh token:
         const access_secret = process.env.ACCESS_SECRET as string;
         const accessToken = jwt.sign({id : user.id, role : "user"}, access_secret, {
@@ -107,9 +110,10 @@ export const loginUser = async (req : Request, res : Response, next : NextFuncti
 }
 
 //refresh token user:
-export const refreshToken = async (req : Request, res : Response, next : NextFunction) => {
+export const refreshToken = async (req : any, res : Response, next : NextFunction) => {
     try {
-        const refreshToken = req.cookies.refresh_token;
+        const refreshToken = req.cookies["refresh_token"] || req.cookies["seller_refresh_token"]||req.headers.authorization?.split(" ")[1];
+
         if(!refreshToken) return new AuthError("Unauthorised Access, Please LogIn");
 
         //If token is present decode it:
@@ -119,11 +123,20 @@ export const refreshToken = async (req : Request, res : Response, next : NextFun
 
 
         //As of now no seller db so consider user type only then extend it to seller and admin roles:
-        const user = await prisma.users.findUnique({where : {id : decoded.id}});
+        let user;
+        if(decoded.role === "user"){
+            user = await prisma.users.findUnique({where : {id : decoded.id}});
+        }else if(decoded.role === "seller"){
+            user = await prisma.sellers.findUnique({where : {id : decoded.id}, include : {shop : true}});
+        }
         if(!user) return new AuthError("No such user exists");
 
         const newAccessToken = jwt.sign({id : decoded.id, role : decoded.role}, process.env.ACCESS_SECRET as string, {expiresIn : "15m"});
-        setCookie(res,"access_token",newAccessToken);
+
+        if(decoded.role === "user") setCookie(res,"access_token",newAccessToken);
+        else if(decoded.role === "seller") setCookie(res,"seller_access_token",newAccessToken);
+
+        req.role = decoded.role;
 
         return res.status(201).json({
             success : true
@@ -326,6 +339,9 @@ export const loginSeller = async (req : Request, res : Response, next : NextFunc
         const isMatch = await bcrypt.compare(password, seller.password!);
         if(!isMatch) return next(new ValidationError("Invalid email or password"));
 
+        res.clearCookie("access_token");
+        res.clearCookie("refresh_token");
+
         //generate access and refresh token:
         const access_token = jwt.sign({id : seller.id, role : "seller"}, process.env.ACCESS_SECRET as string, {expiresIn : "15m"});
         const refresh_token = jwt.sign({id : seller.id, role : "seller"}, process.env.REFRESH_SECRET as string, {expiresIn : "7d"});
@@ -335,11 +351,7 @@ export const loginSeller = async (req : Request, res : Response, next : NextFunc
 
         res.status(200).json({
             message : "Login Successful",
-            seller : {
-                id : seller.id,
-                email : seller.email,
-                name : seller.name
-            }
+            seller
         })
     } catch (error) {
         next(error);
