@@ -14,6 +14,8 @@ import RichTextEditor from '@/shared/components/RichTextEditor';
 import SizeSelector from '@/shared/components/SizeSelector';
 import Image from 'next/image';
 import { enhancements } from '@/utils/aiEnhancement';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 interface UploadedImage {
     fileId : string;
@@ -50,7 +52,8 @@ const Page = () => {
     const categories = data?.categories || [];
     const subCategoriesData = data?.subCategories || [];
     const selectedCategory = watch("category");
-    const regularPrice = watch("regularPrice");
+    const regular_price = watch("regular_price");
+    const router = useRouter();
 
     const subCategories = useMemo(() => {
         return selectedCategory ? subCategoriesData[selectedCategory] || [] : [];
@@ -145,7 +148,17 @@ const Page = () => {
     }
 
     const onSubmit = async (data: any) => {
-
+        try {
+            setLoading(true);
+            console.log(data)
+            const res = await axiosInstance.post("/products/api/products", data);
+            router.push("/dashboard/products");
+        } catch (error : any) {
+            toast.error(error?.data?.message);
+            return;
+        }finally{
+            setLoading(false);
+        }
     }
 
     return (
@@ -224,7 +237,7 @@ const Page = () => {
                                     cols={10}
                                     label="Short Description * (Max 150 words)"
                                     placeholder="Enter product short description"
-                                    {...register("desrciption", {
+                                    {...register("description", {
                                         required: "Product description is required",
                                         validate: (value) => {
                                             const wordCount = value.trim().split(/\s+/).length;
@@ -235,8 +248,8 @@ const Page = () => {
                                     })}
                                 />
                                 {
-                                    errors.desrciption && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.desrciption.message as string}</p>
+                                    errors.description && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.description.message as string}</p>
                                     )
                                 }
                             </div>
@@ -324,7 +337,7 @@ const Page = () => {
                                     Cash On Delivery *
                                 </label>
                                 <select {
-                                    ...register("cod", { required: "Please select an option" })
+                                    ...register("cash_on_delivery", { required: "Please select an option" })
                                 }
                                     defaultValue="yes"
                                     className="w-full border outline-none border-gray-700 bg-transparent">
@@ -421,29 +434,29 @@ const Page = () => {
 
                             <div className="mt-2">
                                 <label className="block font-semibold text-gray-300 mb-1">
-                                    Detailed Description(min 100 words) *
+                                    Detailed Description(min 30 words) 
                                 </label>
 
                                 <Controller
-                                    name="detailedDescription"
+                                    name="detailed_description"
                                     control={control}
-                                    rules={{
-                                        required: "Detailed description is required",
-                                        validate: (value) => {
-                                            const wordCount = value.trim()?.split(/\s+/).filter((word: string) => word).length;
+                                    // rules={{
+                                    //     required: "Detailed description is required",
+                                    //     validate: (value) => {
+                                    //         const wordCount = value.trim()?.split(/\s+/).filter((word: string) => word).length;
 
-                                            return (
-                                                wordCount >= 100 || "Detailed description should be at least 100 words"
-                                            );
-                                        },
-                                    }}
+                                    //         return (
+                                    //             wordCount >= 30 || "Detailed description should be at least 30 words"
+                                    //         );
+                                    //     },
+                                    // }}
                                     render={({ field }) => (
                                         <RichTextEditor value={field.value} onChange={field.onChange} />
                                     )}
                                 />
                                 {
-                                    errors.detailedDescription && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.detailedDescription.message as string}</p>
+                                    errors.detailed_description && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.detailed_description.message as string}</p>
                                     )
                                 }
                             </div>
@@ -473,7 +486,7 @@ const Page = () => {
                                     label='Regular Price'
                                     placeholder='2000'
                                     {
-                                    ...register("regularPrice", {
+                                    ...register("regular_price", {
                                         valueAsNumber: true,
                                         min: {
                                             value: 1,
@@ -483,8 +496,8 @@ const Page = () => {
                                     })
                                     }
                                 />{
-                                    errors.regularPrice && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.regularPrice.message as string}</p>
+                                    errors.regular_price && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.regular_price.message as string}</p>
                                     )
                                 }
                             </div>
@@ -494,7 +507,7 @@ const Page = () => {
                                     label='Sale Price'
                                     placeholder='1500'
                                     {
-                                    ...register("salePrice", {
+                                    ...register("sale_price", {
                                         required: "Sale price is required",
                                         valueAsNumber: true,
                                         min: {
@@ -503,7 +516,7 @@ const Page = () => {
                                         },
                                         validate: (value) => {
                                             if (isNaN(value)) return "Sale price must be a number";
-                                            if (regularPrice && value > regularPrice) {
+                                            if (regular_price && value > regular_price) {
                                                 return "Sale price cannot be higher than regular price";
                                             }
                                             return true;
@@ -511,8 +524,8 @@ const Page = () => {
                                     })
                                     }
                                 />{
-                                    errors.regularPrice && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.regularPrice.message as string}</p>
+                                    errors.regular_price && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.regular_price.message as string}</p>
                                     )
                                 }
                             </div>
@@ -627,8 +640,8 @@ const Page = () => {
                 <div className="mt-6 flex justify-end gap-3">
                     {
                         isChange && (
-                            <button type='button' className='px-4 py-2 bg-blue-500 text-white rounded-md'
-                                onClick={handleCreateProduct}>
+                            <button type='submit' className='px-4 py-2 bg-blue-500 text-white rounded-md'
+                                >
                                 Create
                             </button>
                         )

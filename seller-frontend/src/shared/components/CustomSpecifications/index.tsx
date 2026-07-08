@@ -19,11 +19,11 @@ const CustomSpecifications = ({control, errors} : any) => {
                         name = {`CustomSpecifications.${index}.name`}
                         control={control}
                         rules = {{ required: "Specification name is required" }}
-                        render={(field) => (
+                        render={({ field }) => (
                             <Input
-                            label={`Specification Name`}
-                            placeholder='e.g. battery, material, etc'
-                            {...field}
+                                label="Specification Name"
+                                placeholder='e.g. battery, material, etc'
+                                {...field}
                             />
                         )}
                         />
@@ -32,10 +32,11 @@ const CustomSpecifications = ({control, errors} : any) => {
                             name = {`CustomSpecifications.${index}.value`}
                             control={control}
                             rules = {{ required: "Specification value is required" }}
-                            render = {({field})=>(
+                            render={({ field }) => (
                                 <Input
-                                 label="Value"
-                                 placeholder = "e.g. 5000mAh, cotton, etc"
+                                    label="Value"
+                                    placeholder="e.g. 5000mAh, cotton, etc"
+                                    {...field}
                                 />
                             )}
                         />

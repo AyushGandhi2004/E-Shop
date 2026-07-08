@@ -6,6 +6,7 @@ import initializeSiteConfig from './libs/initializeSiteConfig.js';
 import router from './routes/product.routes.js';
 import dotenv from 'dotenv';
 import path from 'path';
+import "./jobs/productCronJob.js"
 
 dotenv.config({
   path: path.resolve(__dirname, "../../../.env"),
