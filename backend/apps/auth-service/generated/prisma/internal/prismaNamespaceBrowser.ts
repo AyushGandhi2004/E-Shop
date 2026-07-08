@@ -53,8 +53,7 @@ export const ModelName = {
   users: 'users',
   shopReviews: 'shopReviews',
   shops: 'shops',
-  sellers: 'sellers',
-  site_config: 'site_config'
+  sellers: 'sellers'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -133,17 +132,6 @@ export const SellersScalarFieldEnum = {
 } as const
 
 export type SellersScalarFieldEnum = (typeof SellersScalarFieldEnum)[keyof typeof SellersScalarFieldEnum]
-
-
-export const Site_configScalarFieldEnum = {
-  id: 'id',
-  categories: 'categories',
-  subCategories: 'subCategories',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type Site_configScalarFieldEnum = (typeof Site_configScalarFieldEnum)[keyof typeof Site_configScalarFieldEnum]
 
 
 export const SortOrder = {

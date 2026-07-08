@@ -69,8 +69,3 @@ export type shops = Prisma.shopsModel
  * 
  */
 export type sellers = Prisma.sellersModel
-/**
- * Model site_config
- * 
- */
-export type site_config = Prisma.site_configModel

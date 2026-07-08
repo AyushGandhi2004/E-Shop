@@ -394,8 +394,7 @@ export const ModelName = {
   users: 'users',
   shopReviews: 'shopReviews',
   shops: 'shops',
-  sellers: 'sellers',
-  site_config: 'site_config'
+  sellers: 'sellers'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -411,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "images" | "users" | "shopReviews" | "shops" | "sellers" | "site_config"
+    modelProps: "images" | "users" | "shopReviews" | "shops" | "sellers"
     txIsolationLevel: never
   }
   model: {
@@ -785,80 +784,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    site_config: {
-      payload: Prisma.$site_configPayload<ExtArgs>
-      fields: Prisma.site_configFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.site_configFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$site_configPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.site_configFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$site_configPayload>
-        }
-        findFirst: {
-          args: Prisma.site_configFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$site_configPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.site_configFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$site_configPayload>
-        }
-        findMany: {
-          args: Prisma.site_configFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$site_configPayload>[]
-        }
-        create: {
-          args: Prisma.site_configCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$site_configPayload>
-        }
-        createMany: {
-          args: Prisma.site_configCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        delete: {
-          args: Prisma.site_configDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$site_configPayload>
-        }
-        update: {
-          args: Prisma.site_configUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$site_configPayload>
-        }
-        deleteMany: {
-          args: Prisma.site_configDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.site_configUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        upsert: {
-          args: Prisma.site_configUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$site_configPayload>
-        }
-        aggregate: {
-          args: Prisma.Site_configAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSite_config>
-        }
-        groupBy: {
-          args: Prisma.site_configGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.Site_configGroupByOutputType>[]
-        }
-        findRaw: {
-          args: Prisma.site_configFindRawArgs<ExtArgs>
-          result: Prisma.JsonObject
-        }
-        aggregateRaw: {
-          args: Prisma.site_configAggregateRawArgs<ExtArgs>
-          result: Prisma.JsonObject
-        }
-        count: {
-          args: Prisma.site_configCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.Site_configCountAggregateOutputType> | number
-        }
-      }
-    }
   }
 } & {
   other: {
@@ -946,17 +871,6 @@ export const SellersScalarFieldEnum = {
 } as const
 
 export type SellersScalarFieldEnum = (typeof SellersScalarFieldEnum)[keyof typeof SellersScalarFieldEnum]
-
-
-export const Site_configScalarFieldEnum = {
-  id: 'id',
-  categories: 'categories',
-  subCategories: 'subCategories',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type Site_configScalarFieldEnum = (typeof Site_configScalarFieldEnum)[keyof typeof Site_configScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1141,7 +1055,6 @@ export type GlobalOmitConfig = {
   shopReviews?: Prisma.shopReviewsOmit
   shops?: Prisma.shopsOmit
   sellers?: Prisma.sellersOmit
-  site_config?: Prisma.site_configOmit
 }
 
 /* Types for Logging */

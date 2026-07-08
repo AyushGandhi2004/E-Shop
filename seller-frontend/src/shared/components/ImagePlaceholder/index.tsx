@@ -3,9 +3,9 @@ import React, { useState } from 'react'
 import Image from 'next/image';
 
 const ImagePlaceHolder = ({
-    size, small, onImageChange, onRemove, defaultImage=null, index=null, setOpenImageModal,
+    size, small, onImageChange, onRemove, defaultImage=null, index=null,images, setOpenImageModal, setSelectedImage, imageLoader
 } : {
-    size : string; small? : boolean; onImageChange : (file : File | null, index : number) => void; onRemove? : (index : number) => void; defaultImage? : string | null; index?: any; setOpenImageModal : (openImageModal : boolean) => void
+    size : string; small? : boolean; onImageChange : (file : File | null, index : number) => void; onRemove? : (index : number) => void; defaultImage? : string | null; index?: any; images: any[]; setOpenImageModal : (openImageModal : boolean) => void; setSelectedImage : (selectedImage : string) => void; imageLoader? : boolean;
 }) => {
     const [imagePreview, setImagePreview] = useState<string | null>(defaultImage);
 
@@ -24,10 +24,13 @@ const ImagePlaceHolder = ({
             {
                 imagePreview ? (
                     <>
-                    <button type='button' onClick={()=> onRemove?.(index!)} className="absolute top-3 right-3 p-2 rounded bg-red-600 shadow-lg"><X size={15}/></button>
+                    <button disabled={imageLoader} type='button' onClick={()=> onRemove?.(index!)} className="absolute top-3 right-3 p-2 rounded bg-red-600 shadow-lg"><X size={15}/></button>
 
-                    <button className="absolute top-3 p-2 right-[70px] rounded bg-blue-500 shadow-lg cursor-pointer"
-                    onClick={()=>setOpenImageModal(true)}>
+                    <button disabled={imageLoader} className="absolute top-3 p-2 right-[70px] rounded bg-blue-500 shadow-lg cursor-pointer"
+                    onClick={()=>{
+                        setOpenImageModal(true)
+                        setSelectedImage(images[index].file_url)
+                        }}>
                         <WandSparkles size={15}/>
                     </button>
                     </>

@@ -7,7 +7,7 @@ import router from './routes/auth.router.js';
 const app = express();
 
 app.use(cors({
-  origin : ["http://localhost:3000"],
+  origin : ["http://localhost:3000", "http://localhost:3001"],
   allowedHeaders : ["Authorization", "Content-Type"],
   credentials : true
 }))
@@ -16,7 +16,7 @@ app.use(express.urlencoded());
 app.use(cookieParser());
 
 //Routes:
-app.use("/api", router)
+app.use(router)
 
 
 app.use(errorMiddleware)

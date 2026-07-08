@@ -1,48 +1,147 @@
 "use client";
 import ImagePlaceHolder from '@/shared/components/ImagePlaceholder';
 import Input from '@/shared/components/Input';
-import { ChevronRight } from 'lucide-react';
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form';
+import { ChevronRight, Wand, X } from 'lucide-react';
+import React, { useMemo, useState } from 'react'
+import { Controller, set, useForm, Watch } from 'react-hook-form';
 import ColorSelector from '@/shared/components/ColorSelector';
 import CustomSpecifications from '@/shared/components/CustomSpecifications';
 import CustomProperties from '@/shared/components/CustomProperties';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import axiosInstance from '@/utils/axiosInstance';
+import RichTextEditor from '@/shared/components/RichTextEditor';
+import SizeSelector from '@/shared/components/SizeSelector';
+import Image from 'next/image';
+import { enhancements } from '@/utils/aiEnhancement';
+
+interface UploadedImage {
+    fileId : string;
+    file_url : string;
+}
 
 const Page = () => {
     const { register, control, watch, setValue, handleSubmit, formState: { errors } } = useForm();
     const [openImageModal, setOpenImageModal] = useState(false);
-    const [isChange, setIsChange] = useState(false);
-    const [images, setImages] = useState<(File | null)[]>([null]);
+    const [isChange, setIsChange] = useState(true);
+    const [images, setImages] = useState<(UploadedImage | null)[]>([null]);
     const [loading, setLoading] = useState(false);
+    const [selectedImage, setSelectedImage] = useState("");
+    const [imageLoader, setImageLoader] = useState(false);
+    const [activeEffect, setActiveEffect] = useState<string | null>(null);
+    const [processing, setProcessing] = useState(false);
 
-    const handleRemoveImage = (index: number) => {
-        setImages((prevImages) => {
-            let updatedImages = [...prevImages];
-
-            if (index == -1) {
-                updatedImages[0] = null;
-            } else {
-                updatedImages.splice(index, 1);
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ["categories"],
+        queryFn: async () => {
+            try {
+                const response = await axiosInstance.get(`/products/api/categories`);
+                console.log(response.data)
+                return response.data.data;
+            } catch (error) {
+                console.log(error)
+                return { categories: [], subCategories: {} };
             }
+        },
+        staleTime: 1000 * 60 * 5,
+        retry: 2
+    })
 
-            if (updatedImages.includes(null) && updatedImages.length < 8) {
-                updatedImages.push(null);
-            }
+    const categories = data?.categories || [];
+    const subCategoriesData = data?.subCategories || [];
+    const selectedCategory = watch("category");
+    const regularPrice = watch("regularPrice");
 
-            return updatedImages;
-        });
-        setValue("images", images);
+    const subCategories = useMemo(() => {
+        return selectedCategory ? subCategoriesData[selectedCategory] || [] : [];
+    }, [selectedCategory, subCategoriesData])
+
+    const { data: discountCodes = [], isLoading : discountLoading } = useQuery({
+        queryKey: ["shop-discounts"],
+        queryFn: async () => {
+            const res = await axiosInstance.get("/products/api/discount-codes");
+            return res?.data?.discount_codes || [];
+        }
+    })
+
+    const applyTransformations = async (effect : string)=>{
+        if(!selectedImage || processing) return;
+        setProcessing(true);
+        setActiveEffect(effect);
+
+        try {
+            const transformedUrl = `${selectedImage}?tr=${effect}`;
+            setSelectedImage(transformedUrl);
+        } catch (error) {
+            console.log(error);
+            return;
+        } finally{
+            setProcessing(false);
+        }
     }
 
-    const handleImageChange = (file: File | null, index: number) => {
-        const updatedImages = [...images];
-        updatedImages[index] = file;
 
-        if (index === images.length - 1 && images.length < 8) {
-            updatedImages.push(null);
+    const handleCreateProduct = () => {
+
+    }
+
+    const handleSaveDraft = () => {
+
+    }
+
+    const convertFileToBase64 = (file : File) => {
+        return new Promise((resolve, reject)=>{
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        })
+    }
+
+    const handleRemoveImage = async (index: number) => {
+
+        try {
+            const updatedImages = [...images];
+            const imageToDelete = updatedImages[index];
+
+            if(imageToDelete && typeof imageToDelete === "object") {
+                await axiosInstance.delete('/products/api/image', { data: { fileId: imageToDelete.fileId } });
+            }
+            updatedImages.splice(index, 1);
+            if(updatedImages.length < 8 && !updatedImages.includes(null)) {
+                updatedImages.push(null);
+            }
+            setImages(updatedImages);
+            setValue("images", updatedImages);
+        } catch (error) {
+            console.log(error)
         }
-        setImages(updatedImages);
-        setValue("images", updatedImages);
+    }
+
+    const handleImageChange = async (file: File | null, index: number) => {
+        if(!file) return;
+
+        try {
+            setImageLoader(true);
+            const fileName = await convertFileToBase64(file);
+            const res = await axiosInstance.post("/products/api/image",{fileName});
+            const updatedImages = [...images];
+            const uploadedImage = {
+                fileId : res.data.fileId,
+                file_url : res.data.file_url
+            }
+            updatedImages[index] = uploadedImage;
+            if(index===images.length-1 && images.length<8){
+                updatedImages.push(null);
+            }
+            setImages(updatedImages);
+            setValue("images", updatedImages);
+
+        } catch (error) {
+            console.log(error)
+        }finally{
+            setImageLoader(false);
+        }
     }
 
     const onSubmit = async (data: any) => {
@@ -72,8 +171,11 @@ const Page = () => {
                                 size='765 x 850'
                                 small={false}
                                 index={0}
+                                images={images}
+                                setSelectedImage = {setSelectedImage}
                                 onImageChange={handleImageChange}
                                 onRemove={handleRemoveImage}
+                                imageLoader={imageLoader}
                             />
                         )
                     }
@@ -87,8 +189,11 @@ const Page = () => {
                                     small
                                     index={index + 1}
                                     key={index}
+                                    images={images}
+                                    setSelectedImage = {setSelectedImage}
                                     onImageChange={handleImageChange}
                                     onRemove={handleRemoveImage}
+                                    imageLoader={imageLoader}
                                 />
                             ))
                         }
@@ -191,8 +296,8 @@ const Page = () => {
 
                             <div className="mt-2">
                                 <Input
-                                    label = "Brand"
-                                    placeholder = "E.g : Apple, Samsung, OnePlus"
+                                    label="Brand"
+                                    placeholder="E.g : Apple, Samsung, OnePlus"
                                     {...register("brand")}
                                 />
                                 {
@@ -207,7 +312,7 @@ const Page = () => {
                             </div>
 
                             <div className="mt-2">
-                                <CustomSpecifications control={control} errors={errors}/>
+                                <CustomSpecifications control={control} errors={errors} />
                             </div>
 
                             <div className="mt-2">
@@ -221,16 +326,314 @@ const Page = () => {
                                 <select {
                                     ...register("cod", { required: "Please select an option" })
                                 }
-                                defaultValue="yes"
-                                className="w-full border outline-none border-gray-700 bg-transparent">
+                                    defaultValue="yes"
+                                    className="w-full border outline-none border-gray-700 bg-transparent">
                                     <option value="yes" className="bg-black">Yes</option>
                                     <option value="no" className="bg-black">No</option>
                                 </select>
                             </div>
                         </div>
+
+                        <div className="w-2/4">
+                            <label className="block font-semibold text-gray-300 mb-1">Category *</label>
+                            {
+                                isLoading ? (
+                                    <p className="text-gray-400">Loading categories...</p>
+                                ) : isError ? (
+                                    <p className="text-red-500">
+                                        Failed to fetch Categories
+                                    </p>
+                                ) : (
+                                    <Controller
+                                        name="category"
+                                        control={control}
+                                        rules={{ required: "Please select a category" }}
+                                        render={({ field }) => (
+                                            <select
+                                                {...field}
+                                                className='w-full border outline-none border-gray-700 bg-transparent'
+                                            >
+                                                {" "}
+                                                <option value="" className='bg-black'>
+                                                    Select Category
+                                                </option>
+                                                {
+                                                    categories.map((category: string) => (
+                                                        <option value={category} key={category} className="bg-black">
+                                                            {category}
+                                                        </option>
+                                                    ))
+                                                }
+
+                                            </select>
+                                        )}
+                                    />
+                                )
+                            }
+                            {
+                                errors.category && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.category.message as string}</p>
+                                )
+                            }
+
+                            <div className="mt-2">
+                                <label className="block font-semibold text-gray-300 mb-1">Sub Category *</label>
+                                {
+                                    isLoading ? (
+                                        <p className="text-gray-400">Loading sub-categories...</p>
+                                    ) : isError ? (
+                                        <p className="text-red-500">
+                                            Failed to fetch sub-Categories
+                                        </p>
+                                    ) : (
+                                        <Controller
+                                            name="subCategory"
+                                            control={control}
+                                            rules={{ required: "Please select a sub-category" }}
+                                            render={({ field }) => (
+                                                <select
+                                                    {...field}
+                                                    className='w-full border outline-none border-gray-700 bg-transparent'
+                                                >
+                                                    {" "}
+                                                    <option value="" className='bg-black'>
+                                                        Select Sub Category
+                                                    </option>
+                                                    {
+                                                        subCategories.map((sub: string) => (
+                                                            <option value={sub} key={sub} className="bg-black">
+                                                                {sub}
+                                                            </option>
+                                                        ))
+                                                    }
+
+                                                </select>
+                                            )}
+                                        />
+                                    )
+                                }
+                                {
+                                    errors.subCategory && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.subCategory.message as string}</p>
+                                    )
+                                }
+                            </div>
+
+                            <div className="mt-2">
+                                <label className="block font-semibold text-gray-300 mb-1">
+                                    Detailed Description(min 100 words) *
+                                </label>
+
+                                <Controller
+                                    name="detailedDescription"
+                                    control={control}
+                                    rules={{
+                                        required: "Detailed description is required",
+                                        validate: (value) => {
+                                            const wordCount = value.trim()?.split(/\s+/).filter((word: string) => word).length;
+
+                                            return (
+                                                wordCount >= 100 || "Detailed description should be at least 100 words"
+                                            );
+                                        },
+                                    }}
+                                    render={({ field }) => (
+                                        <RichTextEditor value={field.value} onChange={field.onChange} />
+                                    )}
+                                />
+                                {
+                                    errors.detailedDescription && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.detailedDescription.message as string}</p>
+                                    )
+                                }
+                            </div>
+
+                            <div className="mt-2">
+                                <Input
+                                    label='Video URL'
+                                    placeholder='https://youtube.com/xyz'
+                                    {
+                                    ...register("video_url", {
+                                        pattern: {
+                                            value: /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/,
+                                            message: "Please enter a valid YouTube URL"
+                                        },
+                                    })
+                                    }
+                                />
+                                {
+                                    errors.video_url && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.video_url.message as string}</p>
+                                    )
+                                }
+                            </div>
+
+                            <div className="mt-2">
+                                <Input
+                                    label='Regular Price'
+                                    placeholder='2000'
+                                    {
+                                    ...register("regularPrice", {
+                                        valueAsNumber: true,
+                                        min: {
+                                            value: 1,
+                                            message: "Regular price cannot be zero or negative"
+                                        },
+                                        validate: (value) => !isNaN(value) || "Regular price must be a number"
+                                    })
+                                    }
+                                />{
+                                    errors.regularPrice && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.regularPrice.message as string}</p>
+                                    )
+                                }
+                            </div>
+
+                            <div className="mt-2">
+                                <Input
+                                    label='Sale Price'
+                                    placeholder='1500'
+                                    {
+                                    ...register("salePrice", {
+                                        required: "Sale price is required",
+                                        valueAsNumber: true,
+                                        min: {
+                                            value: 1,
+                                            message: "Sale price cannot be zero or negative"
+                                        },
+                                        validate: (value) => {
+                                            if (isNaN(value)) return "Sale price must be a number";
+                                            if (regularPrice && value > regularPrice) {
+                                                return "Sale price cannot be higher than regular price";
+                                            }
+                                            return true;
+                                        }
+                                    })
+                                    }
+                                />{
+                                    errors.regularPrice && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.regularPrice.message as string}</p>
+                                    )
+                                }
+                            </div>
+
+                            <div className="mt-2">
+                                <Input
+                                    label='Stock *'
+                                    placeholder='100'
+                                    {
+                                    ...register("stock", {
+                                        required: "Stock is required",
+                                        valueAsNumber: true,
+                                        min: { value: 1, message: "Stock cannot be zero or negative" },
+                                        max: { value: 10000, message: "Stock cannot exceed 10000" },
+                                        validate: (value) => {
+                                            if (isNaN(value)) return "Stock must be a number";
+                                            if (!Number.isInteger(value)) return "Stock must be an integer";
+                                            return true;
+                                        }
+                                    })
+                                    }
+                                />
+                                {
+                                    errors.stock && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.stock.message as string}</p>
+                                    )
+                                }
+                            </div>
+
+                            <div className="mt-2">
+                                <SizeSelector control={control} errors={errors} />
+                            </div>
+
+                            <div className="mt-2">
+                                <label className='block font-semibold text-gray-300 mb-1'>Select Discount Codes (optional)</label>
+                                {
+                                    discountLoading ? (
+                                        <p className="text-gray-400"> Loading discount codes...</p>
+                                    ) : (
+                                        <div className="flex flex-wrap gap-2">
+                                            {
+                                                discountCodes?.map((discount : any) => (
+                                                    <button key={discount.id} className={`px-3 py-1 rounded-md text-sm font-semibold border ${watch('discountCodes')?.includes(discount.id) ? "bg-blue-600 text-white border-blue-600" : "bg-gray-800 text-gray-300 border-gray-600 hover:border-gray-700" }`} onClick={()=>{
+                                                        const currentSelection = watch("discountCodes") || [];
+                                                        const updatedSelection = currentSelection?.includes(discount.id) ? currentSelection.filter((id : string)=> id!==discount.id) : [...currentSelection, discount.id]
+
+                                                        setValue("discountCodes",updatedSelection)
+                                                    }}>
+                                                        {discount.public_name} : ({discount.discountValue})
+                                                        {discount.discountType === "percentage" ? "%" : "Rs"}
+                                                    </button>
+                                                ))
+                                            }
+                                        </div>
+                                    )
+                                }
+
+                            </div>
+                        </div>
+
+
                     </div>
+
                 </div>
             </div>
+            {
+                openImageModal && (
+                    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60 z-50">
+                        <div className="bg-gray-800 p-6 rounded-lg w-[450px] text-white">
+                            <div className="flex items-center justify-between pb-3 mb-4">
+                                <h2 className="text-lg font-semibold">Enhance Product Image</h2>
+                                <X size={20} className='ml-auto cursor-pointer' onClick={() => setOpenImageModal(false)} />
+                            </div>
+                            <div className="relative w-full h-[250px] rounded-md overflow-hidden border border-gray-600">
+                                <Image src={selectedImage} alt="product-preview" layout='fill' />
+                            </div>
+                            {
+                                selectedImage && (
+                                    <div className="mt-4 space-y-2">
+                                        <h3 className="text-white text-sm font-semibold">
+                                            AI Enhancement
+                                        </h3>
+                                        <div className="grid grid-cols-2 gap-3 max-h-[250px] overflow-y-auto">
+                                            {
+                                                enhancements.map(({label, effect})=>(
+                                                    <button type='button' key={effect} className={`p-2 rounded-md flex items-center gap-2 ${effect === activeEffect} ? "bg-blue-600 text-white" : "bg-gray-700 hover:bg-gray-600"}`}
+                                                    onClick={()=>applyTransformations(effect)} disabled={processing}>
+                                                        <Wand size={20} />
+                                                        {label}
+                                                    </button>
+                                                ))
+                                            }
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </div>
+                )
+            }
+            <div className="mt-6 flex justify-end gap-3">
+                    {
+                        isChange && (
+                            <button type='button' className='px-4 py-2 bg-gray-700 text-white rounded-md'
+                                onClick={handleSaveDraft}>
+                                Save Draft
+                            </button>
+                        )
+                    }
+                </div>
+
+                <div className="mt-6 flex justify-end gap-3">
+                    {
+                        isChange && (
+                            <button type='button' className='px-4 py-2 bg-blue-500 text-white rounded-md'
+                                onClick={handleCreateProduct}>
+                                Create
+                            </button>
+                        )
+                    }
+                </div>
 
         </form>
     )

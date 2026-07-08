@@ -1,6 +1,6 @@
 import type { Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
-import prisma from "../../apps/auth-service/prisma/index.js"
+import prisma from "../prisma/index.js"
 
 const authMiddleware = async (req : any, res : Response, next : NextFunction) => {
     try {

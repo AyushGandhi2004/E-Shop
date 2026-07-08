@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import prisma from "../../prisma/index.js";
+import prisma from "../../../../packages/prisma/index.js";
 import { AuthError, ValidationError } from "../../../../packages/error-handler/index.js";
 import { validaRegistrationData, checkEmailOtpRestrictions, trackOtpRequest, sendOtp, verifyOtp, handleForgotPassword, verifyForgotPasswordOTP } from "../utils/auth.helper.js";
 import bcrypt from "bcryptjs"
