@@ -18,7 +18,7 @@ const Page = () => {
     const { data: discountCodes = [], isLoading } = useQuery({
         queryKey: ["shop-discounts"],
         queryFn: async () => {
-            const res = await axiosInstance.get("/products/api/discount-codes");
+            const res = await axiosInstance.get("/products/api/seller/discount-codes");
             return res?.data?.discount_codes || [];
         }
     })
@@ -34,7 +34,7 @@ const Page = () => {
 
     const createDiscountCodesMutation = useMutation({
         mutationFn : async (data : FormData) => {
-            await axiosInstance.post('/products/api/discount-codes',data);
+            await axiosInstance.post('/products/api/seller/discount-codes',data);
         },
         onSuccess : ()=>{
             queryClient.invalidateQueries({queryKey : ['shop-discounts']});
@@ -45,7 +45,7 @@ const Page = () => {
 
     const deleteDiscountCodeMutation = useMutation({
         mutationFn : async (discountId : string)=>{
-            await axiosInstance.delete(`/products/api/discount-codes/${discountId}`);
+            await axiosInstance.delete(`/products/api/seller/discount-codes/${discountId}`);
         },
         onSuccess : () => {
             queryClient.invalidateQueries({queryKey : ['shop-discounts']});

@@ -62,7 +62,7 @@ const Page = () => {
     const { data: discountCodes = [], isLoading : discountLoading } = useQuery({
         queryKey: ["shop-discounts"],
         queryFn: async () => {
-            const res = await axiosInstance.get("/products/api/discount-codes");
+            const res = await axiosInstance.get("/products/api/seller/discount-codes");
             return res?.data?.discount_codes || [];
         }
     })
@@ -151,7 +151,7 @@ const Page = () => {
         try {
             setLoading(true);
             console.log(data)
-            const res = await axiosInstance.post("/products/api/products", data);
+            const res = await axiosInstance.post("/products/api/seller/products", data);
             router.push("/dashboard/products");
         } catch (error : any) {
             toast.error(error?.data?.message);

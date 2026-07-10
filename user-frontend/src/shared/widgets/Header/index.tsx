@@ -4,9 +4,12 @@ import Link from 'next/link'
 import React from 'react'
 import HearderBottom from './HearderBottom'
 import useUser from '@/hooks/useUser';
+import { useStore } from '@/store';
 
 const Header = () => {
     const { user, isLoading } = useUser();
+    const wishlist = useStore((state : any)=>state.wishlist);
+    const cart = useStore((state : any)=>state.cart);
     // console.log(user)
 
     return (
@@ -56,13 +59,13 @@ const Header = () => {
                         <Link href={"/wishlist"} className='relative'>
                             <Heart className='h-7 w-7' />
                             <div className="w-5 h-5 border-2 border-white bg-red-500 rounded-full flex items-center justify-center absolute top-[-7px] right-[-7px]">
-                                <span className='text-white text-xs'>0</span>
+                                <span className='text-white text-xs'>{wishlist?.length}</span>
                             </div>
                         </Link>
                         <Link href={"/cart"} className='relative'>
                             <ShoppingCart className='h-7 w-7' />
                             <div className="w-5 h-5 border-2 border-white bg-red-500 rounded-full flex items-center justify-center absolute top-[-7px] right-[-7px]">
-                                <span className='text-white text-xs'>0</span>
+                                <span className='text-white text-xs'>{cart?.length}</span>
                             </div>
                         </Link>
                     </div>

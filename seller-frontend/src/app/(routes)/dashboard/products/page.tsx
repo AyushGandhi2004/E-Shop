@@ -9,7 +9,7 @@ import Link from 'next/link';
 import React, { useMemo, useState } from 'react'
 
 const fetchProducts = async () => {
-    const res = await axiosInstance.get("/products/api/products");
+    const res = await axiosInstance.get("/products/api/seller/products");
     console.log(res.data);
     return res?.data?.products
 }
@@ -30,10 +30,10 @@ const Page = () => {
     });
 
     const deleteProduct = async (productId : string) => {
-        const res = await axiosInstance.delete(`/products/api/products/${productId}`);
+        const res = await axiosInstance.delete(`/products/api/seller/products/${productId}`);
     }
     const restoreProduct = async (productId : string) => {
-        const res = await axiosInstance.patch(`/products/api/products/${productId}`);
+        const res = await axiosInstance.patch(`/products/api/seller/products/${productId}`);
     }
 
     const restoreMutation = useMutation({

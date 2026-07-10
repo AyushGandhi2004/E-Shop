@@ -127,6 +127,7 @@ model products{
   starting_date DateTime?
   ending_date DateTime?
   stock Int
+  totalSales Int @default(0)
   sale_price Float
   regular_price Float
   ratings Float @default(0)
@@ -140,8 +141,8 @@ model products{
   deletedAt DateTime?
   shopId String @db.ObjectId
   shop shops @relation(fields: [shopId], references: [id])
-  sellerId String @db.ObjectId
-  sellers sellers @relation(fields: [sellerId], references: [id])
+  // sellerId String @db.ObjectId
+  // sellers sellers @relation(fields: [sellerId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
